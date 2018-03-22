@@ -70,7 +70,7 @@ class VQA():
 
         for i in range(df.shape[0]):
             x = next(iter)
-            labels = append(x[1][2])
+            labels.append(x[1][2])
             questions.append(x[1][1])
             imgs.append(x[1][0])
 
