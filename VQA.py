@@ -63,28 +63,20 @@ class VQA():
         df = pd.read_csv('vqa_dataset_v2.txt', delimiter='\t')
         df = df.dropna()
         df = df.sample(frac=1)
-        iter = df.iterrows()
-        questions = []
-        imgs = []
-        labels = []
-
-        for i in range(df.shape[0]):
-            x = next(iter)
-            labels.append(x[1][2])
-            questions.append(x[1][1])
-            imgs.append(x[1][0])
+        questions = np.array(df['question'])
+        imgs = np.array(df['image_id'])
+        labels = np.array(df['answer'])
 
         count = 0
         while True:
-            for i in range(df.shape[0]):
-                x = next(iter)
+            for i in range(len(labels)):
                 ans = labels[i]
                 question = questions[i]
                 img = imgs[i]
                 current_image = self.encoded_images[img]
                 count+=1
                 
-                encoded_q = encode_question(question)
+                encoded_q = self.encode_question(question)
                 encoded_questions.append(encoded_q)
                 
                 a = np.zeros(self.answer_size)
