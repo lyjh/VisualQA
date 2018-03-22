@@ -66,19 +66,25 @@ class VQA():
         iter = df.iterrows()
         questions = []
         imgs = []
-        ans = []
+        labels = []
+
+        for i in range(df.shape[0]):
+            x = next(iter)
+            labels = append(x[1][2])
+            questions.append(x[1][1])
+            imgs.append(x[1][0])
 
         count = 0
         while True:
             for i in range(df.shape[0]):
                 x = next(iter)
-                ans = x[1][2]
-                question = x[1][1]
-                img = x[1][0]
+                ans = labels[i]
+                question = questions[i]
+                img = imgs[i]
                 current_image = self.encoded_images[img]
                 count+=1
                 
-                encoded_q = [(self.word2index[txt] if txt in self.word2index else self.word2index['<Unk>']) for txt in question]
+                encoded_q = encode_question(question)
                 encoded_questions.append(encoded_q)
                 
                 a = np.zeros(self.answer_size)
@@ -154,3 +160,9 @@ class VQA():
         final_model.compile(loss='categorical_crossentropy', optimizer=RMSprop(), metrics=['accuracy'])
         final_model.summary()
         return final_model
+
+    def encode_question(self, question):
+        return [(self.word2index[txt] if txt in self.word2index else self.word2index['<Unk>']) for txt in question[:-1].split()]
+
+    def decode_answer(self, ans):
+        return self.index2answer[ans]
