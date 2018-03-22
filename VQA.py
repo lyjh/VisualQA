@@ -106,7 +106,7 @@ class VQA():
                 embeddings_index[word] = coefs
             f.close()
 
-            embedding_matrix = np.zeros((self.vocab_size+1, EMBEDDING_DIM))
+            embedding_matrix = np.zeros((self.vocab_size, EMBEDDING_DIM))
             for word, i in self.word2index.items():
                 embedding_vector = embeddings_index.get(word)
                 if embedding_vector is not None:
